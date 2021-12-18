@@ -1,4 +1,4 @@
-package BattleShipModel;
+package model;
 
 public class BattleShipModel {
 
