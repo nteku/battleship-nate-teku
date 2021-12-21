@@ -3,6 +3,7 @@ package view;
 import java.util.Observable;
 import java.util.Observer;
 
+import battleShipMessages.BattleShipMoveMessage;
 import controller.BattleShipController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -20,6 +21,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import model.BattleShip;
 import model.BattleShipModel;
 
 public class BattleShipView extends Application implements Observer {
@@ -36,6 +38,7 @@ public class BattleShipView extends Application implements Observer {
 	private Rectangle player2 [][]= new Rectangle [10][10];
 	private char tenAlphabets[] = {'A','B','C','D','E','F','G','H','I','J'};
 	private Button playButton;
+	private static int shipsAssigned = 0;
 	
 	@Override
 	public void start(Stage arg0) throws Exception {
@@ -68,8 +71,10 @@ public class BattleShipView extends Application implements Observer {
 			    
             playButton.setOnMouseClicked((click) ->{
            	 
-           
-            	controller.assignShips();
+                for (int i = 0; i < 6; i++) {
+            	     controller.assignShips();
+                }
+                
             	playTheGame();
             	
             });
@@ -87,17 +92,19 @@ public class BattleShipView extends Application implements Observer {
 	
 	
 	public void playTheGame() {
+		
+		gameStarted = true;
 		Label l = new Label("Predict a coordinate, where the CPU's battleship (s) may be");
-		g.setRight(l);
+		//g.setRight(l);
 		
 		g1.setOnMouseClicked((click) -> {
 			
-			 System.out.println("X coordinate: " + click.getX() + " Y coordinate: " + click.getY());
+		   controller.makingMove(getYCoordinates(click.getY()),getXCoordinates(click.getX()));
 			
 		});
 	}
 	
-	public int getXCoordinates(int xCoordinate) {
+	public int getXCoordinates(double xCoordinate) {
 		
 				// return 0 if the value of the x coordinate is between 20 and 50
 				if (20 <= xCoordinate && xCoordinate <= 50) {
@@ -107,32 +114,43 @@ public class BattleShipView extends Application implements Observer {
 				if (xCoordinate >= 51 && xCoordinate <= 81) {
 					return 1;
 				}
-				// return 2 if the value of the x coordinate is between 103 and 143
+				// return 2 if the value of the x coordinate is between 83 and 113
 				if (xCoordinate >= 83 && xCoordinate <= 113) {
 					return 2;
 				}
-				// return 3 if the value of the x coordinate is between 152 and 192
-				if (xCoordinate >= 152 && xCoordinate <= 192) {
+				// return 3 if the value of the x coordinate is between 114 and 144
+				if (xCoordinate >= 114 && xCoordinate <= 144) {
 					return 3;
 				}
-				// return 4 if the value of the x coordinate is between 200 and 240
-				if (xCoordinate >= 200 && xCoordinate <= 240) {
+				// return 4 if the value of the x coordinate is between 145 and 175
+				if (xCoordinate >= 145 && xCoordinate <= 175) {
 					return 4;
 				}
-				// return 5 if the value of the x coordinate is between 248 and 288
-				if (xCoordinate >= 248 && xCoordinate <= 288) {
+				// return 5 if the value of the x coordinate is between 176 and 206
+				if (xCoordinate >= 176 && xCoordinate <= 206) {
 					return 5;
 				}
 				// return 6 if the value of the x coordinate is between 295 and 336
-				if (xCoordinate >= 295 && xCoordinate <= 336) {
+				if (xCoordinate >= 207 && xCoordinate <= 237) {
 					return 6;
 				}
-
+				// return 7 if the value of the x coordinate is between 238 and 268
+				if (xCoordinate >= 238 && xCoordinate <= 268) {
+					return 7;
+				}
+				// return 8 if the value of the x coordinate is between 268 and 300
+				if (xCoordinate >= 269 && xCoordinate <= 300) {
+					return 8;
+				}
+				// return 9 if the value of the x coordinate is between 301 and 332
+				if (xCoordinate >= 301 && xCoordinate <= 332) {
+					return 9;
+				}
 				return 100;
 	}
 	
 	
-	public int getYCoordinates(int yCoordinate) {
+	public int getYCoordinates(double yCoordinate) {
 		// return 0 if the value of the y coordinate is between 108 and 138
 		if (108 <= yCoordinate && yCoordinate <= 138) {
 			return 0;
@@ -243,14 +261,48 @@ public class BattleShipView extends Application implements Observer {
 	 
 		  
 		  if (gameStarted == false) {
-				player1[0][0].setFill(Color.BLACK);
-				player1[0][1].setFill(Color.BLACK);
-			    g.setRight(null);
-				
+			  
+		      
+			  BattleShip ship = (BattleShip) arg;
+			  
+			    if (shipsAssigned < 3) {
+					player1[ship.getRow1()][ship.getCol1()].setFill(Color.BLACK);
+					player1[ship.getRow2()][ship.getCol2()].setFill(Color.BLACK);
+					player1[ship.getRow3()][ship.getCol3()].setFill(Color.BLACK);
+					shipsAssigned++;
+			    }
+			    else {
+			    	player2[ship.getRow1()][ship.getCol1()].setFill(Color.BLACK);
+					player2[ship.getRow2()][ship.getCol2()].setFill(Color.BLACK);
+					player2[ship.getRow3()][ship.getCol3()].setFill(Color.BLACK);
+					
+					 
+			    }
+				 
 			
 		  }
 		  else {
+			  BattleShipMoveMessage msg = (BattleShipMoveMessage) arg;
 			  
+			  if (msg.getCurrentPlayer() == 1) {
+					  if (msg.getStatus() == 1) {
+						  player2[msg.getRow()][msg.getColumn()].setFill(Color.DARKGREY);
+					  }
+					  else if (msg.getStatus() == 2) {
+						  
+					  }
+					  else {
+						  player2[msg.getRow()][msg.getColumn()].setFill(Color.RED);
+					  }
+			  
+			  
+			  
+			  }
+			  else {
+				  
+				  
+				  
+			  }
 		  }
 		
 	}

@@ -18,4 +18,8 @@ public class BattleShipController {
 	public void makingMove(int row, int col) {
 		m.makeMove(row,col);
 	}
+	
+	public void makingAIMove(int row, int col) {
+		m.makeAIMove(row, col);
+	}
 }
