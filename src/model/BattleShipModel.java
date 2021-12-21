@@ -54,7 +54,7 @@ public class BattleShipModel extends Observable {
 			player2[randomRow][randomColumn + 1].setIsMarkedBlack(true);
 			player2[randomRow][randomColumn + 2].setIsMarkedBlack(true);
 			
-			shipsAssigned++;
+			shipsAssigned++; 
 			setChanged();
 			notifyObservers(new BattleShip (randomRow,randomColumn,randomRow,randomColumn + 1, randomRow, randomColumn + 2));
 		}
@@ -85,7 +85,55 @@ public class BattleShipModel extends Observable {
 	}
 	
 	public void makeAIMove(int row, int col) {
+		if ( (player1[row][col].getIsMarkedBlack() == false) && (player1[row][col].getIsGuessed() == false)) {
+			player1[row][col].setGuessed(true);
+			setChanged();
+			notifyObservers(new BattleShipMoveMessage(row,col,1,1));
+			
+		}
+		else if ((player1[row][col].getIsMarkedBlack() == false) && (player1[row][col].getIsGuessed() == true)) {
+			setChanged();
+			notifyObservers(new BattleShipMoveMessage(row,col,2,1));
+		}
 		
+		else if ((player1[row][col].getIsMarkedBlack() == true) && (player1[row][col].getIsGuessed() == false)) {
+			player1[row][col].setIsMarkedBlack(false);
+			player1[row][col].setGuessed(true);
+			setChanged();
+			notifyObservers(new BattleShipMoveMessage(row,col,3,1));
+		}
+		else {
+			 
+		}
 	}
 	
+ 
+	
+    public boolean gotAllPlayer1Ships() {
+    	for (int i = 0; i <rowAndColumnSize; i++) {
+			for (int j = 0; j < rowAndColumnSize; j++) {
+				if (player1[i][j].getIsMarkedBlack() != false) {
+					return false;
+				}
+				
+			}
+		}
+		
+		return true;
+    }
+	
+    public boolean gotAllPlayer2Ships() {
+    	for (int i = 0; i <rowAndColumnSize; i++) {
+			for (int j = 0; j < rowAndColumnSize; j++) {
+				if (player2[i][j].getIsMarkedBlack() != false) {
+					return false;
+				}
+				
+			}
+		}
+		
+		return true;
+    }
+    
+    
 }

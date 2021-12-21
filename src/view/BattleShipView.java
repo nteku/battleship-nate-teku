@@ -9,6 +9,8 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -31,6 +33,7 @@ public class BattleShipView extends Application implements Observer {
 	private GridPane g1;
 	private GridPane g2;
 	private boolean gameStarted = false;
+	private boolean gameOver = false;
 	private BattleShipModel model;
 	private final int rowAndColumnSize = 10;
 	private BattleShipController controller;
@@ -39,6 +42,7 @@ public class BattleShipView extends Application implements Observer {
 	private char tenAlphabets[] = {'A','B','C','D','E','F','G','H','I','J'};
 	private Button playButton;
 	private static int shipsAssigned = 0;
+	private Alert alert;
 	
 	@Override
 	public void start(Stage arg0) throws Exception {
@@ -99,6 +103,9 @@ public class BattleShipView extends Application implements Observer {
 		
 		g1.setOnMouseClicked((click) -> {
 			
+		   if (gameOver == true) {
+			   return;
+		   }
 		   controller.makingMove(getYCoordinates(click.getY()),getXCoordinates(click.getX()));
 			
 		});
@@ -255,10 +262,68 @@ public class BattleShipView extends Application implements Observer {
 		g.setRight(g2);
 	}
 	
+	
+	public boolean player1IsFull() {
+		
+		for (int i = 0; i <rowAndColumnSize; i++) {
+			for (int j = 0; j < rowAndColumnSize; j++) {
+				if (player1[i][j].getFill() == Color.WHITE) {
+					return false;
+				}
+				
+			}
+		}
+		
+		return true;
+	}
+	
+    public boolean player2IsFull() {
+		
+		for (int i = 0; i <rowAndColumnSize; i++) {
+			for (int j = 0; j < rowAndColumnSize; j++) {
+				if (player2[i][j].getFill() == Color.WHITE) {
+					return false;
+				}
+				
+			}
+		}
+		
+		return true;
+	}
+    
+    
+    public boolean gotAllPlayer1Ships() {
+    	for (int i = 0; i <rowAndColumnSize; i++) {
+			for (int j = 0; j < rowAndColumnSize; j++) {
+				if (player1[i][j].getFill()== Color.BLACK) {
+					return false;
+				}
+				
+			}
+		}
+		
+		return true;
+    }
+	
+    
+    public boolean gotAllPlayer2Ships() {
+    	for (int i = 0; i <rowAndColumnSize; i++) {
+			for (int j = 0; j < rowAndColumnSize; j++) {
+				if (player2[i][j].getFill()== Color.BLACK) {
+					return false;
+				}
+				
+			}
+		}
+		
+		return true;
+    }
+    
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-	 
+	   
+		  model = (BattleShipModel) o;
 		  
 		  if (gameStarted == false) {
 			  
@@ -285,15 +350,30 @@ public class BattleShipView extends Application implements Observer {
 			  BattleShipMoveMessage msg = (BattleShipMoveMessage) arg;
 			  
 			  if (msg.getCurrentPlayer() == 1) {
-					  if (msg.getStatus() == 1) {
-						  player2[msg.getRow()][msg.getColumn()].setFill(Color.DARKGREY);
-					  }
-					  else if (msg.getStatus() == 2) {
-						  
-					  }
-					  else {
-						  player2[msg.getRow()][msg.getColumn()].setFill(Color.RED);
-					  }
+							  if (msg.getStatus() == 1) {
+								  player2[msg.getRow()][msg.getColumn()].setFill(Color.DARKGREY);
+								 if (player2IsFull() == true) {
+									 alert = new Alert(AlertType.INFORMATION);
+									 alert.setTitle("Grid is Full");
+									 alert.setContentText("All of the CPU's slots have been guessed. CPU wins");
+									 alert.showAndWait();
+									 gameOver = true;
+								 }
+							  }
+							  else if (msg.getStatus() == 2) {
+								  
+							  }
+							  else {
+								  player2[msg.getRow()][msg.getColumn()].setFill(Color.RED);
+								  
+								  if (gotAllPlayer2Ships() == true) {
+									     alert = new Alert(AlertType.INFORMATION);
+										 alert.setTitle("You Won");
+										 alert.setContentText("You got all the CPU's ships. You won!");
+										 alert.showAndWait();
+										 gameOver = true;
+								  }
+							  }
 			  
 			  
 			  
