@@ -93,8 +93,17 @@ public class BattleShipModel extends Observable {
 			
 		}
 		else if ((player1[row][col].getIsMarkedBlack() == false) && (player1[row][col].getIsGuessed() == true)) {
+			
+			Random newRandom = new Random();
+			int randomRow = newRandom.nextInt(10);
+			int randomCol = newRandom.nextInt(10);
+			
+			while (player1[randomRow][randomCol].getIsGuessed() == true) {
+				randomRow = newRandom.nextInt(10);
+				randomCol = newRandom.nextInt(10);
+			}
 			setChanged();
-			notifyObservers(new BattleShipMoveMessage(row,col,2,2));
+			notifyObservers(new BattleShipMoveMessage(randomRow,randomCol,2,2));
 		}
 		
 		else if ((player1[row][col].getIsMarkedBlack() == true) && (player1[row][col].getIsGuessed() == false)) {
