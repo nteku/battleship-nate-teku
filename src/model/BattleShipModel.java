@@ -5,6 +5,7 @@ import java.util.Random;
 import java.io.Serializable;
 
 import battleShipMessages.BattleShipMoveMessage;
+import javafx.scene.paint.Color;
 
 public class BattleShipModel extends Observable {
 
@@ -88,31 +89,31 @@ public class BattleShipModel extends Observable {
 		if ( (player1[row][col].getIsMarkedBlack() == false) && (player1[row][col].getIsGuessed() == false)) {
 			player1[row][col].setGuessed(true);
 			setChanged();
-			notifyObservers(new BattleShipMoveMessage(row,col,1,1));
+			notifyObservers(new BattleShipMoveMessage(row,col,1,2));
 			
 		}
 		else if ((player1[row][col].getIsMarkedBlack() == false) && (player1[row][col].getIsGuessed() == true)) {
 			setChanged();
-			notifyObservers(new BattleShipMoveMessage(row,col,2,1));
+			notifyObservers(new BattleShipMoveMessage(row,col,2,2));
 		}
 		
 		else if ((player1[row][col].getIsMarkedBlack() == true) && (player1[row][col].getIsGuessed() == false)) {
 			player1[row][col].setIsMarkedBlack(false);
 			player1[row][col].setGuessed(true);
 			setChanged();
-			notifyObservers(new BattleShipMoveMessage(row,col,3,1));
+			notifyObservers(new BattleShipMoveMessage(row,col,3,2));
 		}
 		else {
 			 
 		}
 	}
 	
- 
-	
+    
+    
     public boolean gotAllPlayer1Ships() {
     	for (int i = 0; i <rowAndColumnSize; i++) {
 			for (int j = 0; j < rowAndColumnSize; j++) {
-				if (player1[i][j].getIsMarkedBlack() != false) {
+				if (player1[i][j].getIsMarkedBlack()== true) {
 					return false;
 				}
 				
@@ -122,18 +123,21 @@ public class BattleShipModel extends Observable {
 		return true;
     }
 	
-    public boolean gotAllPlayer2Ships() {
-    	for (int i = 0; i <rowAndColumnSize; i++) {
-			for (int j = 0; j < rowAndColumnSize; j++) {
-				if (player2[i][j].getIsMarkedBlack() != false) {
-					return false;
+	
+	
+	   public boolean gotAllPlayer2Ships() {
+	    	for (int i = 0; i <rowAndColumnSize; i++) {
+				for (int j = 0; j < rowAndColumnSize; j++) {
+					if (player2[i][j].getIsMarkedBlack() == true) {
+						return false;
+					}
+					
 				}
-				
 			}
-		}
-		
-		return true;
-    }
+			
+			return true;
+	    }
+ 
     
     
 }

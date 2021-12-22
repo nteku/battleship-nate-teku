@@ -2,12 +2,15 @@ package view;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 import battleShipMessages.BattleShipMoveMessage;
 import controller.BattleShipController;
 import javafx.application.Application;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -29,7 +32,8 @@ import model.BattleShipModel;
 public class BattleShipView extends Application implements Observer {
 
  
-	private BorderPane g;
+	//private BorderPane g;
+	private GridPane g;
 	private GridPane g1;
 	private GridPane g2;
 	private boolean gameStarted = false;
@@ -41,6 +45,7 @@ public class BattleShipView extends Application implements Observer {
 	private Rectangle player2 [][]= new Rectangle [10][10];
 	private char tenAlphabets[] = {'A','B','C','D','E','F','G','H','I','J'};
 	private Button playButton;
+	private Button infoButton;
 	private static int shipsAssigned = 0;
 	private Alert alert;
 	
@@ -53,26 +58,55 @@ public class BattleShipView extends Application implements Observer {
 		 	controller = new BattleShipController(model);
 		 	
 		 	model.addObserver(this);
-		 	g = new BorderPane();
-	 
+		 	g = new GridPane();
+		 	//g.setPadding(new Insets(10));
 		 
-		    Label title = new Label("Welcome to BattleShip");
-		  title.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 30));
-		    BorderPane.setAlignment(title, Pos.CENTER);
-		    g.setTop(title);
+		   Label title = new Label("                                  Welcome to BattleShip");
 		    
-		 initializeTwoGrids();
-		  
+		    
+		    title.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 30));
+		    title.setAlignment(Pos.CENTER);
+		    g.getChildren().add(0, title);
+		 
+		   
+		    
+		    Label labels = new Label ("                  You                                                         CPU");
+		 
+		    labels.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 30));
+		    labels.setAlignment(Pos.TOP_LEFT);
+		    g.add(labels, 0, 2);
+		    
+		 
+		     initializeTwoGrids();
 		 
 		 
-		    playButton = new Button("Play");
-		    playButton.setAlignment(Pos.CENTER);
+		    playButton = new Button(" Play ");
+		    playButton.setPadding(new Insets(10,10,10,10));
+		    playButton.setAlignment(Pos.BOTTOM_CENTER);
+		    
+		    infoButton = new Button("   ?   ");
+		    
+		    infoButton.setPadding(new Insets(10,10,10,10));
+		    infoButton.setAlignment(Pos.BOTTOM_CENTER);
+		    
+		    
 		 	g.setPrefHeight(600);
 		 	g.setPrefWidth(900);
 		 	g.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #4FC3F7,#4FC3F7)");
-		 	  BorderPane.setAlignment(playButton, Pos.BOTTOM_CENTER);
-			g.setBottom(playButton);
-			    
+		 	  //BorderPane.setAlignment(playButton, Pos.BOTTOM_CENTER);
+			//g.setBottom(playButton);
+			
+		 	
+		 	HBox buttons = new HBox(15,playButton,infoButton);
+		 	buttons.setAlignment(Pos.BOTTOM_CENTER);
+		 	buttons.setPadding(new Insets(10,-140,10,10));
+		    
+		 	GridPane.setHalignment(playButton, HPos.CENTER); 
+		 	GridPane.setValignment(playButton, VPos.BOTTOM);
+		 	g.add(buttons, 0, 15);
+		  
+		 	//g.add(playButton, 1, 15, 1, 1);
+		   //g.addColumn(15, playButton);
             playButton.setOnMouseClicked((click) ->{
            	 
                 for (int i = 0; i < 6; i++) {
@@ -101,12 +135,21 @@ public class BattleShipView extends Application implements Observer {
 		Label l = new Label("Predict a coordinate, where the CPU's battleship (s) may be");
 		//g.setRight(l);
 		
-		g1.setOnMouseClicked((click) -> {
+		g2.setOnMouseClicked((click) -> {
 			
+			//System.out.println("X coordinate: " + click.getX() + " Y coordinate: " + click.getY() );
+		   
 		   if (gameOver == true) {
 			   return;
 		   }
 		   controller.makingMove(getYCoordinates(click.getY()),getXCoordinates(click.getX()));
+		   if (gameOver == true) {
+			   return;
+		   }
+		   Random random = new Random();
+		   int randomY = random.nextInt(10);
+		   int randomX = random.nextInt(10);
+		   controller.makingAIMove(randomY, randomX);
 			
 		});
 	}
@@ -208,8 +251,8 @@ public class BattleShipView extends Application implements Observer {
 		g1.setPadding(new Insets(20, 20, 20, 20));
 		
 		g2 = new GridPane();
-		g2.setAlignment(Pos.CENTER_LEFT);
-		g2.setPadding(new Insets(20, 20, 20, 20));
+		g2.setAlignment(Pos.BASELINE_RIGHT);
+		g2.setPadding(new Insets(30, -125, 20, 10));
 		
 		for (int i = 0; i < rowAndColumnSize;i++) {
 			
@@ -256,10 +299,15 @@ public class BattleShipView extends Application implements Observer {
 	}
  
 		
-	 
-	 
-		g.setCenter(g1);
-		g.setRight(g2);
+	  
+	   
+       g1.setAlignment(Pos.BOTTOM_LEFT);
+       g2.setAlignment(Pos.CENTER_RIGHT);
+       
+       g.add(g1, 0, 10);
+       g.add(g2, 0, 10);
+		//g.setCenter(g1);
+		//g.setRight(g2);
 	}
 	
 	
@@ -290,34 +338,10 @@ public class BattleShipView extends Application implements Observer {
 		
 		return true;
 	}
-    
-    
-    public boolean gotAllPlayer1Ships() {
-    	for (int i = 0; i <rowAndColumnSize; i++) {
-			for (int j = 0; j < rowAndColumnSize; j++) {
-				if (player1[i][j].getFill()== Color.BLACK) {
-					return false;
-				}
-				
-			}
-		}
-		
-		return true;
-    }
+ 
 	
     
-    public boolean gotAllPlayer2Ships() {
-    	for (int i = 0; i <rowAndColumnSize; i++) {
-			for (int j = 0; j < rowAndColumnSize; j++) {
-				if (player2[i][j].getFill()== Color.BLACK) {
-					return false;
-				}
-				
-			}
-		}
-		
-		return true;
-    }
+  
     
 	@Override
 	public void update(Observable o, Object arg) {
@@ -337,9 +361,9 @@ public class BattleShipView extends Application implements Observer {
 					shipsAssigned++;
 			    }
 			    else {
-			    	player2[ship.getRow1()][ship.getCol1()].setFill(Color.BLACK);
-					player2[ship.getRow2()][ship.getCol2()].setFill(Color.BLACK);
-					player2[ship.getRow3()][ship.getCol3()].setFill(Color.BLACK);
+			    	//player2[ship.getRow1()][ship.getCol1()].setFill(Color.BLACK);
+					//player2[ship.getRow2()][ship.getCol2()].setFill(Color.BLACK);
+					//player2[ship.getRow3()][ship.getCol3()].setFill(Color.BLACK);
 					
 					 
 			    }
@@ -351,22 +375,31 @@ public class BattleShipView extends Application implements Observer {
 			  
 			  if (msg.getCurrentPlayer() == 1) {
 							  if (msg.getStatus() == 1) {
-								  player2[msg.getRow()][msg.getColumn()].setFill(Color.DARKGREY);
-								 if (player2IsFull() == true) {
-									 alert = new Alert(AlertType.INFORMATION);
-									 alert.setTitle("Grid is Full");
-									 alert.setContentText("All of the CPU's slots have been guessed. CPU wins");
-									 alert.showAndWait();
-									 gameOver = true;
-								 }
+								  
+								  
+										  player2[msg.getRow()][msg.getColumn()].setFill(Color.DARKGREY);
+										 if (player2IsFull() == true) {
+											 alert = new Alert(AlertType.INFORMATION);
+											 alert.setTitle("Grid is Full");
+											 alert.setContentText("All of the CPU's slots have been guessed.Therefore, CPU wins");
+											 alert.showAndWait();
+											 gameOver = true;
+										 }
+								 
+								  
 							  }
 							  else if (msg.getStatus() == 2) {
-								  
+									  if (player2[msg.getRow()][msg.getColumn()].getFill() == Color.DARKGREY) {
+										  alert = new Alert(AlertType.ERROR);
+										  alert.setTitle("Slot already guessed");
+										  alert.setContentText("This slot has already been guessed. Try again");
+										  alert.showAndWait();
+							      }
 							  }
 							  else {
 								  player2[msg.getRow()][msg.getColumn()].setFill(Color.RED);
 								  
-								  if (gotAllPlayer2Ships() == true) {
+								  if (model.gotAllPlayer2Ships() == true) {
 									     alert = new Alert(AlertType.INFORMATION);
 										 alert.setTitle("You Won");
 										 alert.setContentText("You got all the CPU's ships. You won!");
@@ -379,7 +412,41 @@ public class BattleShipView extends Application implements Observer {
 			  
 			  }
 			  else {
-				  
+				    
+				  if (msg.getStatus() == 1) {
+					  
+					  if (player1[msg.getRow()][msg.getColumn()].getFill() == Color.DARKGREY) {
+							  alert = new Alert(AlertType.ERROR);
+							  alert.setTitle("Slot already guessed");
+							  alert.setContentText("This slot has already been guessed. Try again");
+							  alert.showAndWait();
+					  }
+					  else {
+							  player1[msg.getRow()][msg.getColumn()].setFill(Color.DARKGREY);
+							 if (player1IsFull() == true) {
+								 alert = new Alert(AlertType.INFORMATION);
+								 alert.setTitle("Grid is Full");
+								 alert.setContentText("All of your slots have been guessed. Therefore, you win!");
+								 alert.showAndWait();
+								 gameOver = true;
+							 }
+					 
+					  }
+				  }
+				  else if (msg.getStatus() == 2) {
+					  
+				  }
+				  else {
+					  player1[msg.getRow()][msg.getColumn()].setFill(Color.RED);
+					  
+					  if (model.gotAllPlayer1Ships() == true) {
+						     alert = new Alert(AlertType.INFORMATION);
+							 alert.setTitle("You Won");
+							 alert.setContentText("CPU got all your player's ships. CPU wins!");
+							 alert.showAndWait();
+							 gameOver = true;
+					  }
+				  }
 				  
 				  
 			  }
