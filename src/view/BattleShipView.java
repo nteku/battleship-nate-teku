@@ -47,7 +47,7 @@ public class BattleShipView extends Application implements Observer {
 	private BattleShipController controller;
 	private Rectangle player1 [][]= new Rectangle[10][10];
 	private Rectangle player2 [][]= new Rectangle [10][10];
-	private char tenAlphabets[] = {'A','B','C','D','E','F','G','H','I','J'};
+	private char tenLetters[] = {'A','B','C','D','E','F','G','H','I','J'};
 	private int tenNumbers[] = {1,2,3,4,5,6,7,8,9,10};
 	private Button playButton;
 	private Button infoButton;
@@ -133,7 +133,16 @@ public class BattleShipView extends Application implements Observer {
             });
  
 	 
-		    
+		    infoButton.setOnMouseClicked((click) -> {
+		    	
+		    	alert = new Alert(AlertType.INFORMATION);
+		    	alert.setTitle("Help");
+		    	alert.setContentText("The purpose of this game is to sink all of the CPU's ships before\n the "
+		    			+ "CPU sinks yours. The game will automatically assign your ships in your grid. The CPU's ships are"
+		    			+ " hidden in order for you to locate them. If found a slot, the slot will be marked as a flame,"
+		    			+ "if not, it will be crossed out. Good luck!" );
+		    	alert.showAndWait();
+		    });
 	
 		 	Scene scene = new Scene(g);
 		 	
@@ -282,45 +291,128 @@ public class BattleShipView extends Application implements Observer {
 		g2.setAlignment(Pos.BASELINE_RIGHT);
 		g2.setPadding(new Insets(30, -125, 20, 10));
 		
+	  /*
 		for (int i = 0; i < rowAndColumnSize;i++) {
-			
-		
+			 
+		     
 				for (int j = 0; j < rowAndColumnSize; j++) {
 					 
-					VBox container = new VBox();
+					if (i == 0) {
+							VBox container = new VBox();
+							
+							Label letter = new Label("    " + Character.toString(tenLetters[j]));
+							letter.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
+							Rectangle r = new Rectangle(30,30);
+							r.setFill(Color.WHITE);
+							r.setStroke(Color.BLACK); 
+							letter.setAlignment(Pos.CENTER_RIGHT);
+						  
+							container.getChildren().add(letter);
+							container.getChildren().add(r);
+							 
+							 player1[i][j] = r;
+							 g1.add(container, j, i);
+							
+					}
+					else {
+							 
+						VBox container = new VBox ();
+							Rectangle r = new Rectangle(30,30);
+							r.setFill(Color.WHITE);
+							r.setStroke(Color.BLACK); 
+							 
+							container.getChildren().add(r);
+							 
+							 player1[i][j] = r;
+							 
+							 g1.add(container, j, i);
+							
+				  
+					}
+				}
+		
+		}
+	  
+	  */
+		
+		for (int i = 0; i < rowAndColumnSize;i++) {
+			 
+			Label num = new Label("" + tenNumbers[i]);
+			g1.add(num, 0, i);
+			for (int j = 0; j < rowAndColumnSize; j++) {
 				 
+				if (i == 0) {
+						VBox container = new VBox();
+						
+						Label letter = new Label("    " + Character.toString(tenLetters[j]));
+						letter.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
+						Rectangle r = new Rectangle(30,30);
+					    r.setFill(Color.WHITE);
+						r.setStroke(Color.BLACK); 
+						letter.setAlignment(Pos.CENTER_RIGHT);
+					  
+						container.getChildren().add(letter);
+						container.getChildren().add(r);
+						 
+						 player1[i][j] = r;
+						 g1.add(container, j + 1, i);
+						
+				}
+				else {
+						
 					 
-					
+					  
+					    VBox container = new VBox ();
+						Rectangle r = new Rectangle(30,30);
+						r.setFill(Color.WHITE);
+						r.setStroke(Color.BLACK); 
+						 
+						container.getChildren().add(r);
+						 
+						 player1[i][j] = r;
+						 
+						 g1.add(container, j + 1, i);
+					   
+			  
+				}
+			}
+			
+			 
+	
+	}
+		for (int i = 0; i < rowAndColumnSize;i++) {
+			
+			Label num = new Label("" + tenNumbers[i]);
+			num.setAlignment(Pos.CENTER_LEFT);
+			num.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
+			g2.add(num, 0, i);
+			for (int j = 0; j < rowAndColumnSize; j++) {
+			 
+				if (i == 0) {
+					VBox container = new VBox();
+					Label letter = new Label("    " + Character.toString(tenLetters[j]));
+					letter.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
+					Rectangle r = new Rectangle(30,30);
+					r.setFill(Color.WHITE);
+					r.setStroke(Color.BLACK); 
+					letter.setAlignment(Pos.CENTER_RIGHT);
+					container.getChildren().add(letter);
+					container.getChildren().add(r);
+					 player2[i][j] = r;
+					 
+					 g2.add(container, j + 1, i);
+				}
+				else {
+					VBox container = new VBox();
 					Rectangle r = new Rectangle(30,30);
 					r.setFill(Color.WHITE);
 					r.setStroke(Color.BLACK); 
 					container.getChildren().add(r);
 					 
-					 player1[i][j] = r;
-					 
-					 g1.add(container, j, i);
-				 
+					 player2[i][j] = r;
+					 g2.add(container, j + 1, i);	
 				}
-		
-		}
-	 
-		
-		for (int i = 0; i < rowAndColumnSize;i++) {
-			
-			
-			for (int j = 0; j < rowAndColumnSize; j++) {
-				Label letterLabel  = new Label();
-				VBox container = new VBox();
-				letterLabel.setText(Character.toString(tenAlphabets[j]));
 				 
-				
-				Rectangle r = new Rectangle(30,30);
-				r.setFill(Color.WHITE);
-				r.setStroke(Color.BLACK); 
-				container.getChildren().add(r);
-				 
-				 player2[i][j] = r;
-				 g2.add(container, j, i);
 			 
 			}
 	
@@ -328,6 +420,7 @@ public class BattleShipView extends Application implements Observer {
  
 		
 	  
+	 
 	   
        g1.setAlignment(Pos.BOTTOM_LEFT);
        g2.setAlignment(Pos.CENTER_RIGHT);
@@ -389,9 +482,7 @@ public class BattleShipView extends Application implements Observer {
 					shipsAssigned++;
 			    }
 			    else {
-			    	//player2[ship.getRow1()][ship.getCol1()].setFill(Color.BLACK);
-					//player2[ship.getRow2()][ship.getCol2()].setFill(Color.BLACK);
-					//player2[ship.getRow3()][ship.getCol3()].setFill(Color.BLACK);
+			    
 					
 					 
 			    }
@@ -405,7 +496,7 @@ public class BattleShipView extends Application implements Observer {
 							  if (msg.getStatus() == 1) {
 								  
 								  
-										  //player2[msg.getRow()][msg.getColumn()].setFill(Color.DARKGREY);
+										  
 								  player2[msg.getRow()][msg.getColumn()].setFill (crossOutImage);
 										 if (player2IsFull() == true) {
 											 alert = new Alert(AlertType.INFORMATION);
