@@ -37,7 +37,7 @@ import model.GameResetSignal;
 public class BattleShipView extends Application implements Observer {
 
  
-
+	// all attributes and arrays declared for the GUI
 	private GridPane g;
 	private GridPane g1;
 	private GridPane g2;
@@ -66,83 +66,93 @@ public class BattleShipView extends Application implements Observer {
 	public void start(Stage arg0) throws Exception {
 		// TODO Auto-generated method stub
 	 
+		    // initialized model
 		 	model = new BattleShipModel();
-		 	 
+		 	// initialized controller
 		 	controller = new BattleShipController(model);
-		 	
+		 	// made model the observer
 		 	model.addObserver(this);
+		 	// set the gridPane
 		 	g = new GridPane();
 		 
-		 	 
+		   // implemented cross out image and fire image 
 	       crossOut = new Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfHkMPC57wqsBv-sSTrEqRnqblq8Yv-Ezw6kdIjErzRVDTLlWzHjlI0XYuhV29VtXlwbE&usqp=CAU");
 	       fire = new Image("https://media.istockphoto.com/photos/fire-flame-isolated-on-white-clipping-path-included-picture-id1281017225?b=1&k=20&m=1281017225&s=170667a&w=0&h=mopf69WQTVymd-vZZ4eLYZEKGyIYMYSttO0ZLYS826g=");
 	       
-	       crossOutImage = new ImagePattern(crossOut);
-	       fireImage = new ImagePattern(fire);
+	        // created the imagePattern for crossout and fire images
+	        crossOutImage = new ImagePattern(crossOut);
+	        fireImage = new ImagePattern(fire);
 	       
-		   Label title = new Label("                                  Welcome to BattleShip");
-		    
-		    
+	        // created Label for title, set the font, position, and added it to the gridPane
+		    Label title = new Label("                                  Welcome to BattleShip");
 		    title.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 30));
 		    title.setAlignment(Pos.CENTER);
 		    g.getChildren().add(0, title);
 		 
 		   
-		    
+		    // created labels for user and CPU, set the font, position, and added it to the gridPane
 		    Label labels = new Label ("                  You                                                         CPU");
-		 
 		    labels.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 30));
 		    labels.setAlignment(Pos.TOP_LEFT);
 		    g.add(labels, 0, 2);
 		    
-		 
+		     // invoked the function to initialize both grids
 		     initializeTwoGrids();
 		 
-		 
+		    // created playButton and positioned it
 		    playButton = new Button(" Play ");
 		    playButton.setPadding(new Insets(10,10,10,10));
 		    playButton.setAlignment(Pos.BOTTOM_CENTER);
 		    
+		    // created infoButton and positioned it 
 		    infoButton = new Button("   ?   ");
-		    
 		    infoButton.setPadding(new Insets(10,10,10,10));
 		    infoButton.setAlignment(Pos.BOTTOM_CENTER);
 		    
 		    
+		    // adjusting the size of the pane and added some coloring
 		 	g.setPrefHeight(600);
 		 	g.setPrefWidth(900);
 		 	g.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #4FC3F7,#4FC3F7)");
 		
 			
-		 	
+		 	// created HBox with both the playButton and infoButton
 		 	HBox buttons = new HBox(15,playButton,infoButton);
 		 	buttons.setAlignment(Pos.BOTTOM_CENTER);
 		 	buttons.setPadding(new Insets(10,-140,10,10));
 		    
+		 	// aligned the playButton and added the HBox to the gridPane
 		 	GridPane.setHalignment(playButton, HPos.CENTER); 
 		 	GridPane.setValignment(playButton, VPos.BOTTOM);
 		 	g.add(buttons, 0, 15);
 		  
-		  
+		   
+		 	// implemented event handling for playButton
             playButton.setOnMouseClicked((click) ->{
            	 
+            	// if the user has played already once
             	if (played != 0) {
+            		 // invoke function to reset all of the game attributes
             		 resetGameAttributes();
             	}
             	
+            	// assigning ships for both user and CPU
                 for (int i = 0; i < 6; i++) {
             	     controller.assignShips();
                 }
+                // set played to 1
                 played = 1;
+                // invoke the playTheGame function
             	playTheGame();
             	
             	
             	 
             });
  
-	 
+            // event handling for infoButton
 		    infoButton.setOnMouseClicked((click) -> {
 		    	
+		    	// initializing the alert attribute and writing text to it
 		    	alert = new Alert(AlertType.INFORMATION);
 		    	alert.setTitle("Help");
 		    	alert.setContentText("The purpose of this game is to sink all of the CPU's ships before\n the "
@@ -152,43 +162,55 @@ public class BattleShipView extends Application implements Observer {
 		    	alert.showAndWait();
 		    });
 	
+		    // initializing the Scene and the Stage
 		 	Scene scene = new Scene(g);
-		 	
 		 	Stage stage = new Stage();
 		 	stage.setTitle("BattleShip Nathan Teku");
 		 	stage.setScene(scene);
 		 	stage.show();
 	}
 	
-	
+	/**
+	 * This function plays the game as the user can guess the CPU slots
+	 */
 	public void playTheGame() {
 		
+		// set the attribute to true
 		gameStarted = true;
 		 
 	 
-		
+		// event handling for the second grid
 		g2.setOnMouseClicked((click) -> {
 			
-						//System.out.println("X coordinate: " + click.getX() + " Y coordinate: " + click.getY() );
+				 
 					   
-					   
+					   // if the game is over, stop the event handling
 					   if (gameOver == true) {
 						   return;
 					   }
+					   
+					   // capture x and y coordinates
 					   y = getYCoordinates(click.getY());
 					   x = getXCoordinates(click.getX());
 					   
+					   // if either x or y has an inaccurate coordinate
 					   if(x == 100 || y == 100) {
+						   
+						   // create an error alert 
 						   alert = new Alert(AlertType.ERROR);
 						   alert.setTitle("Error");
 						   alert.setContentText("Inaccurate slot");
 						   alert.showAndWait();
 					   }
 					   else {
+						   // make the move
 						   controller.makingMove(y,x);
+						   // if the game is over, stop the event handling
 						   if (gameOver == true) {
 							   return;
 						   }
+						   
+						   // randomize the row and column for the CPU and make the move
 						   Random random = new Random();
 						   int randomY = random.nextInt(10);
 						   int randomX = random.nextInt(10);
@@ -303,22 +325,33 @@ public class BattleShipView extends Application implements Observer {
 	 */
 	public void initializeTwoGrids() {
 		
-		
+		// 1st grid initialized
 		g1 = new GridPane();
+		// Centering the first grid
 		g1.setAlignment(Pos.CENTER_LEFT);
+		// setting the padding for the 1st grid
 		g1.setPadding(new Insets(20, 20, 20, 20));
 		
+		// 2nd grid initialized 
 		g2 = new GridPane();
+		// Centering the second grid
 		g2.setAlignment(Pos.BASELINE_RIGHT);
+		// setting the padding for the 2nd grid
 		g2.setPadding(new Insets(30, -125, 20, 10));
 		
+		// setting up the nested loop
 		for (int i = 0; i < rowAndColumnSize;i++) {
 			 
+			// create the number
 			Label num = new Label("" + tenNumbers[i]);
-			 
+			// set the font
 			num.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
+			// set the position
 			num.setAlignment(Pos.CENTER);
+			// add to the first grid
 			g1.add(num, 0, i);
+			
+			// second loop for the columns 
 			for (int j = 0; j < rowAndColumnSize; j++) {
 				 
 				if (i == 0) {
@@ -341,7 +374,7 @@ public class BattleShipView extends Application implements Observer {
 				else {
 						
 					 
-					  
+					    // creating the slot and adding it to the gridPane
 					    VBox container = new VBox ();
 						Rectangle r = new Rectangle(30,30);
 						r.setFill(Color.WHITE);
@@ -360,16 +393,22 @@ public class BattleShipView extends Application implements Observer {
 			 
 	
 	}
+		
+		// setting up nested loop for second gridPane
 		for (int i = 0; i < rowAndColumnSize;i++) {
 			
+			// adding the numbers
 			Label num = new Label("" + tenNumbers[i]);
 			num.setAlignment(Pos.CENTER);
 	 
 			num.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
 			g2.add(num, 0, i);
+			// inner loop
 			for (int j = 0; j < rowAndColumnSize; j++) {
 			 
+				
 				if (i == 0) {
+					// setting up the VBox with the letters
 					VBox container = new VBox();
 					Label letter = new Label("    " + Character.toString(tenLetters[j]));
 					letter.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
@@ -384,6 +423,7 @@ public class BattleShipView extends Application implements Observer {
 					 g2.add(container, j + 1, i);
 				}
 				else {
+					// setting up the VBox
 					VBox container = new VBox();
 					Rectangle r = new Rectangle(30,30);
 					r.setFill(Color.WHITE);
@@ -402,14 +442,14 @@ public class BattleShipView extends Application implements Observer {
 		
 	  
 	 
-	   
+	   // positioning both gridPanes
        g1.setAlignment(Pos.BOTTOM_LEFT);
        g2.setAlignment(Pos.CENTER_RIGHT);
        
+       // adding the gridPanes to the big gridPane
        g.add(g1, 0, 10);
        g.add(g2, 0, 10);
-		//g.setCenter(g1);
-		//g.setRight(g2);
+		 
 	}
 	
 	/**
@@ -418,6 +458,7 @@ public class BattleShipView extends Application implements Observer {
 	 */
 	public boolean player1IsFull() {
 		
+		// iterating through user's grid
 		for (int i = 0; i <rowAndColumnSize; i++) {
 			for (int j = 0; j < rowAndColumnSize; j++) {
 				if (player1[i][j].getFill() == Color.WHITE) {
@@ -431,11 +472,12 @@ public class BattleShipView extends Application implements Observer {
 	}
 	
 	/**
-	 * Checking to see if all of player 2's slots are filled
+	 * Checking to see if all of CPU's slots are filled
 	 * @return
 	 */
     public boolean player2IsFull() {
 		
+    	// iterating through CPU grid  
 		for (int i = 0; i <rowAndColumnSize; i++) {
 			for (int j = 0; j < rowAndColumnSize; j++) {
 				if (player2[i][j].getFill() == Color.WHITE) {
@@ -453,6 +495,7 @@ public class BattleShipView extends Application implements Observer {
     * This function resets all of the boards back to default 
     */
    public void resetBoards() {
+	   // iterating through both grids and reset them back to white
 	   for (int i = 0; i < rowAndColumnSize; i++) {
 		   for (int j = 0; j < rowAndColumnSize; j++) {
 			   player1[i][j].setFill(Color.WHITE);
@@ -465,14 +508,19 @@ public class BattleShipView extends Application implements Observer {
     * This function resets all of the game attributes if user wants to play game again
     */
    public void resetGameAttributes() {
+	   // reseting all of the attributes
 	    gameStarted = false;
 		gameOver = false;
 		shipsAssigned = 0;
+		
+		// creating a new Model and making it the observer
 		BattleShipModel newModel = new BattleShipModel();
 		model = newModel;
 		model.addObserver(this);
 
+		// creating a new Controller
 		controller = new BattleShipController(model);
+		// initializing the two grids again
 		initializeTwoGrids();
    }
    
@@ -480,116 +528,137 @@ public class BattleShipView extends Application implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		if (arg.getClass() == GameResetSignal.class) {
-			// It's a new game so clear the game board
-			 resetBoards();
-		}
-		else {
-		  model = (BattleShipModel) o;
-		   
-		  if (gameStarted == false) {
-			  
-		      
-			  BattleShip ship = (BattleShip) arg;
-			  
-			    if (shipsAssigned < 3) {
-					player1[ship.getRow1()][ship.getCol1()].setFill(Color.BLACK);
-					player1[ship.getRow2()][ship.getCol2()].setFill(Color.BLACK);
-					player1[ship.getRow3()][ship.getCol3()].setFill(Color.BLACK);
-					shipsAssigned++;
-			    }
-			    else {
-			    
-					//gameStarted = true;
-					 
-			    }
-				 
-			
-		  }
-		  else {
-			  BattleShipMoveMessage msg = (BattleShipMoveMessage) arg;
-			  
-			  if (msg.getCurrentPlayer() == 1) {
-							  if (msg.getStatus() == 1) {
-								  
-								  
-										  
-								  player2[msg.getRow()][msg.getColumn()].setFill (crossOutImage);
-										 if (player2IsFull() == true) {
-											 alert = new Alert(AlertType.INFORMATION);
-											 alert.setTitle("Grid is Full");
-											 alert.setContentText("All of the CPU's slots have been guessed.Therefore, CPU wins");
-											 alert.showAndWait();
-											 gameOver = true;
-										 }
-								 
-								  
-							  }
-							  else if (msg.getStatus() == 2) {
-									  if (player2[msg.getRow()][msg.getColumn()].getFill() != Color.WHITE ) {
-										  alert = new Alert(AlertType.ERROR);
-										  alert.setTitle("Slot already guessed");
-										  alert.setContentText("This slot has already been guessed. Try again");
-										  alert.showAndWait();
-							      }
-							  }
-							  else {
-								  player2[msg.getRow()][msg.getColumn()].setFill(fireImage);
-								  
-								  if (model.gotAllPlayer2Ships() == true) {
-									     alert = new Alert(AlertType.INFORMATION);
-										 alert.setTitle("You Won");
-										 alert.setContentText("You got all the CPU's ships. You won!");
-										 alert.showAndWait();
-										 gameOver = true;
-								  }
-							  }
-			  
-			  
-			  
-			  }
-			  else {
-				    
-				  if (msg.getStatus() == 1) {
-					  
-					  if (player1[msg.getRow()][msg.getColumn()].getFill() != Color.WHITE) {
-							  alert = new Alert(AlertType.ERROR);
-							  alert.setTitle("Slot already guessed");
-							  alert.setContentText("This slot has already been guessed. Try again");
-							  alert.showAndWait();
-					  }
-					  else {
-							  player1[msg.getRow()][msg.getColumn()].setFill( crossOutImage);
-							 if (player1IsFull() == true) {
-								 alert = new Alert(AlertType.INFORMATION);
-								 alert.setTitle("Grid is Full");
-								 alert.setContentText("All of your slots have been guessed. Therefore, you win!");
-								 alert.showAndWait();
-								 gameOver = true;
-							 }
-					 
-					  }
-				  }
-				  else if (msg.getStatus() == 2) {
-					  
+		
+		
+				if (arg.getClass() == GameResetSignal.class) {
+					// It's a new game so clear the game boards
+					 resetBoards();
+				}
+				else {
+						 // model created 
+						  model = (BattleShipModel) o;
+						   
+						  // if the game hasn't started 
+						  if (gameStarted == false) {
+							  
+						      // filling the slots black as they are the ships
+							  BattleShip ship = (BattleShip) arg;
+							  if (shipsAssigned < 3) {
+									player1[ship.getRow1()][ship.getCol1()].setFill(Color.BLACK);
+									player1[ship.getRow2()][ship.getCol2()].setFill(Color.BLACK);
+									player1[ship.getRow3()][ship.getCol3()].setFill(Color.BLACK);
+									shipsAssigned++;
+							    }
+							    else {
+							    
+							 
+									 
+							    }
+						 
+					
 				  }
 				  else {
-					  player1[msg.getRow()][msg.getColumn()].setFill(fireImage);
-					  
-					  if (model.gotAllPlayer1Ships() == true) {
-						     alert = new Alert(AlertType.INFORMATION);
-							 alert.setTitle("You Won");
-							 alert.setContentText("CPU got all your player's ships. CPU wins!");
-							 alert.showAndWait();
-							 gameOver = true;
-					  }
-				  }
-				  
-				  
-			  }
-		  }
-		
-	}
+							  BattleShipMoveMessage msg = (BattleShipMoveMessage) arg;
+							  
+							  // if the user is playing 
+							  if (msg.getCurrentPlayer() == 1) {
+								  			  
+								              // if the slot hasn't been guessed but it is not part of the ship
+											  if (msg.getStatus() == 1) {
+												  
+												  
+												  // cross out that slot		  
+												  player2[msg.getRow()][msg.getColumn()].setFill (crossOutImage);
+												         // checking if the board is full
+														 if (player2IsFull() == true) {
+															 alert = new Alert(AlertType.INFORMATION);
+															 alert.setTitle("Grid is Full");
+															 alert.setContentText("All of the CPU's slots have been guessed.Therefore, CPU wins");
+															 alert.showAndWait();
+															 gameOver = true;
+														 }
+												 
+												  
+											  }
+											  // if the slot has already been guessed 
+											  else if (msg.getStatus() == 2) {
+													  if (player2[msg.getRow()][msg.getColumn()].getFill() != Color.WHITE ) {
+														  // set an Alert 
+														  alert = new Alert(AlertType.ERROR);
+														  alert.setTitle("Slot already guessed");
+														  alert.setContentText("This slot has already been guessed. Try again");
+														  alert.showAndWait();
+											      }
+											  }
+											  // if the slot is part of the ship
+											  else {
+												  player2[msg.getRow()][msg.getColumn()].setFill(fireImage);
+												  
+												  if (model.gotAllPlayer2Ships() == true) {
+													     alert = new Alert(AlertType.INFORMATION);
+														 alert.setTitle("You Won");
+														 alert.setContentText("You got all the CPU's ships. You won!");
+														 alert.showAndWait();
+														 gameOver = true;
+												  }
+											  }
+							  
+							  
+							  
+							  }
+							  // if it is the AI making the move
+							  else {
+								    
+								  // if the slot has been guessed  
+								  if (msg.getStatus() == 1) {
+									  
+									  
+									  if (player1[msg.getRow()][msg.getColumn()].getFill() != Color.WHITE) {
+										      // create the error alert
+											  alert = new Alert(AlertType.ERROR);
+											  alert.setTitle("Slot already guessed");
+											  alert.setContentText("This slot has already been guessed. Try again");
+											  alert.showAndWait();
+									  }
+									  else {
+										     // cross out the slot
+											  player1[msg.getRow()][msg.getColumn()].setFill( crossOutImage);
+											  // if all of player 1's slots have been chosen
+											 if (player1IsFull() == true) {
+												 // create the alert
+												 alert = new Alert(AlertType.INFORMATION);
+												 alert.setTitle("Grid is Full");
+												 alert.setContentText("All of your slots have been guessed. Therefore, you win!");
+												 alert.showAndWait();
+												 gameOver = true;
+											 }
+									 
+									  }
+								  }
+								  else if (msg.getStatus() == 2) {
+									  
+								  }
+								  // if the slot is part of the ship
+								  else {
+									  // create the fire image
+									  player1[msg.getRow()][msg.getColumn()].setFill(fireImage);
+									  
+									  // if the CPU got all of the player's ships
+									  if (model.gotAllPlayer1Ships() == true) {
+										     // create the alert 
+										     alert = new Alert(AlertType.INFORMATION);
+											 alert.setTitle("You Won");
+											 alert.setContentText("CPU got all your player's ships. CPU wins!");
+											 alert.showAndWait();
+											 gameOver = true;
+									  }
+								  }
+								  
+								  
+							  }
+						  }
+				
+			}
 
 	}
 
