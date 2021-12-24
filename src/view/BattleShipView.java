@@ -32,6 +32,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import model.BattleShip;
 import model.BattleShipModel;
+import model.GameResetSignal;
 
 public class BattleShipView extends Application implements Observer {
 
@@ -59,6 +60,7 @@ public class BattleShipView extends Application implements Observer {
 	private Image fire;
 	private ImagePattern crossOutImage;
 	private ImagePattern fireImage;
+	private static int played = 0;
 	
 	@Override
 	public void start(Stage arg0) throws Exception {
@@ -124,12 +126,18 @@ public class BattleShipView extends Application implements Observer {
 		  
             playButton.setOnMouseClicked((click) ->{
            	 
+            	if (played != 0) {
+            		 resetGameAttributes();
+            	}
+            	
                 for (int i = 0; i < 6; i++) {
             	     controller.assignShips();
                 }
-                
+                played = 1;
             	playTheGame();
             	
+            	
+            	 
             });
  
 	 
@@ -186,103 +194,116 @@ public class BattleShipView extends Application implements Observer {
 						   int randomX = random.nextInt(10);
 						   controller.makingAIMove(randomY, randomX);
 					   }
-					 
+					   
 			
 		});
 	}
 	
+	/**
+	 * This function calculates the X coordinate of where it was clicked in the grid
+	 * @param xCoordinate, value where it was clicked in the grid
+	 * @return the specified column
+	 */
 	public int getXCoordinates(double xCoordinate) {
 		
-				// return 0 if the value of the x coordinate is between 20 and 50
+				// return 0 if the value of the x coordinate is between 546 and 576
 				if (546 <= xCoordinate && xCoordinate <= 576) {
 					return 0;
 				}
-				// return 1 if the value of the x coordinate is between 51 and 81
+				// return 1 if the value of the x coordinate is between 578 and 607
 				if (xCoordinate >= 578 && xCoordinate <= 607) {
 					return 1;
 				}
-				// return 2 if the value of the x coordinate is between 83 and 113
+				// return 2 if the value of the x coordinate is between 610 and 639
 				if (xCoordinate >= 610 && xCoordinate <= 639) {
 					return 2;
 				}
-				// return 3 if the value of the x coordinate is between 114 and 144
+				// return 3 if the value of the x coordinate is between 640 and 670
 				if (xCoordinate >= 640 && xCoordinate <= 670) {
 					return 3;
 				}
-				// return 4 if the value of the x coordinate is between 145 and 175
+				// return 4 if the value of the x coordinate is between 671 and 701
 				if (xCoordinate >= 671 && xCoordinate <= 701) {
 					return 4;
 				}
-				// return 5 if the value of the x coordinate is between 176 and 206
+				// return 5 if the value of the x coordinate is between 702 and 733
 				if (xCoordinate >= 702 && xCoordinate <= 733) {
 					return 5;
 				}
-				// return 6 if the value of the x coordinate is between 295 and 336
+				// return 6 if the value of the x coordinate is between 734 and 764
 				if (xCoordinate >= 734 && xCoordinate <= 764) {
 					return 6;
 				}
-				// return 7 if the value of the x coordinate is between 238 and 268
+				// return 7 if the value of the x coordinate is between 765 and 795
 				if (xCoordinate >= 765 && xCoordinate <= 795) {
 					return 7;
 				}
-				// return 8 if the value of the x coordinate is between 268 and 300
+				// return 8 if the value of the x coordinate is between 796 and 826
 				if (xCoordinate >= 796 && xCoordinate <= 826) {
 					return 8;
 				}
-				// return 9 if the value of the x coordinate is between 301 and 332
+				// return 9 if the value of the x coordinate is between 827 and 857
 				if (xCoordinate >= 827 && xCoordinate <= 857) {
 					return 9;
 				}
 				return 100;
 	}
 	
-	
+	/**
+	 * This function calculates the Y coordinate of where it was clicked in the grid
+	 * @param yCoordinate, value where it was clicked in the grid
+	 * @return the specified row
+	 */
 	public int getYCoordinates(double yCoordinate) {
-		// return 0 if the value of the y coordinate is between 108 and 138
-		if (29 <= yCoordinate && yCoordinate <= 59) {
+		// return 0 if the value of the y coordinate is between 49 and 79
+		if (49 <= yCoordinate && yCoordinate <= 79) {
 			return 0;
 		}
-		// return 1 if the value of the y coordinate is between 139 and 169
-		if (yCoordinate >= 60 && yCoordinate <= 90) {
+		// return 1 if the value of the y coordinate is between 80 and 110
+		if (yCoordinate >= 80 && yCoordinate <= 110) {
 			return 1;
 		}
-		// return 2 if the value of the y coordinate is between 170 and 200
-		if (yCoordinate >= 91 && yCoordinate <= 121) {
+		// return 2 if the value of the y coordinate is between 111 and 141
+		if (yCoordinate >= 111 && yCoordinate <= 141) {
 			return 2;
 		}
-		// return 3 if the value of the y coordinate is between 201 and 230
-		if (yCoordinate >= 122 && yCoordinate <= 152) {
+		// return 3 if the value of the y coordinate is between 142 and 172
+		if (yCoordinate >= 142 && yCoordinate <= 172) {
 			return 3;
 		}
-		// return 4 if the value of the y coordinate is between 232 and 262
-		if (yCoordinate >= 153 && yCoordinate <= 183) {
+		// return 4 if the value of the y coordinate is between 173 and 203
+		if (yCoordinate >= 173 && yCoordinate <= 203) {
 			return 4;
 		}
-		// return 5 if the value of the y coordinate is between 263 and 292
-		if (yCoordinate >= 184 && yCoordinate <= 214) {
+		// return 5 if the value of the y coordinate is between 204 and 234
+		if (yCoordinate >= 204 && yCoordinate <= 234) {
 			return 5;
 		}
-		// return 6 if the value of the y coordinate is between 293 and 325
-		if (yCoordinate >= 215 && yCoordinate <= 245) {
+		// return 6 if the value of the y coordinate is between 235 and 265
+		if (yCoordinate >= 235 && yCoordinate <= 265) {
 			return 6;
 		}
-		// return 7 if the value of the y coordinate is between 326 and 356
-		if (yCoordinate >= 246 && yCoordinate <= 276) {
+		// return 7 if the value of the y coordinate is between 266 and 296
+		if (yCoordinate >= 266 && yCoordinate <= 296) {
 			return 7;
 		}
-		// return 8 if the value of the y coordinate is between 357 and 387
-		if (yCoordinate >= 277 && yCoordinate <= 307) {
+		// return 8 if the value of the y coordinate is between 297 and 327
+		if (yCoordinate >= 297 && yCoordinate <= 327) {
 			return 8;
 		}
-		// return 9 if the value of the y coordinate is between 388 and 418
-		if (yCoordinate >= 308 && yCoordinate <= 338) {
+		// return 9 if the value of the y coordinate is between 328 and 358
+		if (yCoordinate >= 328 && yCoordinate <= 358) {
 			return 9;
 		}
 		return 100;
 	}
 	
-	
+	/**
+	 * This function calculates and places the two game boards
+	 */
 	public void initializeTwoGrids() {
+		
+		
 		g1 = new GridPane();
 		g1.setAlignment(Pos.CENTER_LEFT);
 		g1.setPadding(new Insets(20, 20, 20, 20));
@@ -291,53 +312,12 @@ public class BattleShipView extends Application implements Observer {
 		g2.setAlignment(Pos.BASELINE_RIGHT);
 		g2.setPadding(new Insets(30, -125, 20, 10));
 		
-	  /*
-		for (int i = 0; i < rowAndColumnSize;i++) {
-			 
-		     
-				for (int j = 0; j < rowAndColumnSize; j++) {
-					 
-					if (i == 0) {
-							VBox container = new VBox();
-							
-							Label letter = new Label("    " + Character.toString(tenLetters[j]));
-							letter.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
-							Rectangle r = new Rectangle(30,30);
-							r.setFill(Color.WHITE);
-							r.setStroke(Color.BLACK); 
-							letter.setAlignment(Pos.CENTER_RIGHT);
-						  
-							container.getChildren().add(letter);
-							container.getChildren().add(r);
-							 
-							 player1[i][j] = r;
-							 g1.add(container, j, i);
-							
-					}
-					else {
-							 
-						VBox container = new VBox ();
-							Rectangle r = new Rectangle(30,30);
-							r.setFill(Color.WHITE);
-							r.setStroke(Color.BLACK); 
-							 
-							container.getChildren().add(r);
-							 
-							 player1[i][j] = r;
-							 
-							 g1.add(container, j, i);
-							
-				  
-					}
-				}
-		
-		}
-	  
-	  */
-		
 		for (int i = 0; i < rowAndColumnSize;i++) {
 			 
 			Label num = new Label("" + tenNumbers[i]);
+			 
+			num.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
+			num.setAlignment(Pos.CENTER);
 			g1.add(num, 0, i);
 			for (int j = 0; j < rowAndColumnSize; j++) {
 				 
@@ -383,7 +363,8 @@ public class BattleShipView extends Application implements Observer {
 		for (int i = 0; i < rowAndColumnSize;i++) {
 			
 			Label num = new Label("" + tenNumbers[i]);
-			num.setAlignment(Pos.CENTER_LEFT);
+			num.setAlignment(Pos.CENTER);
+	 
 			num.setFont(Font.font("Helvetica", FontWeight.EXTRA_BOLD, 14));
 			g2.add(num, 0, i);
 			for (int j = 0; j < rowAndColumnSize; j++) {
@@ -431,7 +412,10 @@ public class BattleShipView extends Application implements Observer {
 		//g.setRight(g2);
 	}
 	
-	
+	/**
+	 * Checking to see if all of player 1's slots are filled
+	 * @return
+	 */
 	public boolean player1IsFull() {
 		
 		for (int i = 0; i <rowAndColumnSize; i++) {
@@ -446,6 +430,10 @@ public class BattleShipView extends Application implements Observer {
 		return true;
 	}
 	
+	/**
+	 * Checking to see if all of player 2's slots are filled
+	 * @return
+	 */
     public boolean player2IsFull() {
 		
 		for (int i = 0; i <rowAndColumnSize; i++) {
@@ -461,13 +449,42 @@ public class BattleShipView extends Application implements Observer {
 	}
  
 	
+   /**
+    * This function resets all of the boards back to default 
+    */
+   public void resetBoards() {
+	   for (int i = 0; i < rowAndColumnSize; i++) {
+		   for (int j = 0; j < rowAndColumnSize; j++) {
+			   player1[i][j].setFill(Color.WHITE);
+			   player2[i][j].setFill(Color.WHITE);
+		   }
+	   }
+   }
     
-  
-    
+   /**
+    * This function resets all of the game attributes if user wants to play game again
+    */
+   public void resetGameAttributes() {
+	    gameStarted = false;
+		gameOver = false;
+		shipsAssigned = 0;
+		BattleShipModel newModel = new BattleShipModel();
+		model = newModel;
+		model.addObserver(this);
+
+		controller = new BattleShipController(model);
+		initializeTwoGrids();
+   }
+   
+   
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-	   
+		if (arg.getClass() == GameResetSignal.class) {
+			// It's a new game so clear the game board
+			 resetBoards();
+		}
+		else {
 		  model = (BattleShipModel) o;
 		   
 		  if (gameStarted == false) {
@@ -483,7 +500,7 @@ public class BattleShipView extends Application implements Observer {
 			    }
 			    else {
 			    
-					
+					//gameStarted = true;
 					 
 			    }
 				 
@@ -574,7 +591,7 @@ public class BattleShipView extends Application implements Observer {
 		
 	}
 
-	 
+	}
 
 	
 }

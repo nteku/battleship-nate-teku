@@ -12,7 +12,7 @@ public class BattleShipModel extends Observable {
 	private final int rowAndColumnSize = 10;
 	private BattleShipSlot player1 [][];
 	private BattleShipSlot player2 [][];
-	private static int shipsAssigned = 0;
+	private static int shipsAssigned;
 	
 	public BattleShipModel () {
 		
@@ -30,6 +30,9 @@ public class BattleShipModel extends Observable {
 				player2[i][j] = slot2;
 			}
 		}
+		setChanged();
+		notifyObservers(new GameResetSignal());
+		shipsAssigned = 0;
 	}
 	
 	public void assigningShips() {
@@ -57,7 +60,7 @@ public class BattleShipModel extends Observable {
 			
 			shipsAssigned++; 
 			setChanged();
-			notifyObservers(new BattleShip (randomRow,randomColumn,randomRow,randomColumn + 1, randomRow, randomColumn + 2));
+			//notifyObservers(new BattleShip (randomRow,randomColumn,randomRow,randomColumn + 1, randomRow, randomColumn + 2));
 		}
 	}
 	
