@@ -1,6 +1,7 @@
 package view;
 
-import java.io.FileInputStream;
+
+
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -17,10 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -34,6 +32,14 @@ import model.BattleShip;
 import model.BattleShipModel;
 import model.GameResetSignal;
 
+
+
+/**
+ * This class is for the GUI view for BattleShip
+ * @author Nathan Teku
+ *
+ */
+@SuppressWarnings("deprecation")
 public class BattleShipView extends Application implements Observer {
 
  
