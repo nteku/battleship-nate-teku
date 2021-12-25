@@ -15,4 +15,5 @@ Here is a quick overview of the project:
  
  . If the CPU hits all of the User's ships, the CPU wins
  
+ Image below shows me hitting 4 parts of the CPU's ships as the CPU hit 4 parts of my ships as well:
 ![image](https://user-images.githubusercontent.com/80705261/147375378-1af36626-fe24-455c-a22c-aeb9c9565af9.png)
