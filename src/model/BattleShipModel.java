@@ -127,34 +127,48 @@ public class BattleShipModel extends Observable {
 		if ( (player1[row][col].getIsMarkedBlack() == false) && (player1[row][col].getIsGuessed() == false)) {
 			// set it as guessed 
 			player1[row][col].setGuessed(true);
+		 
 			setChanged();
 			notifyObservers(new BattleShipMoveMessage(row,col,1,2));
 			
 		}
+		
 		// if the slot has been guessed and is not part of the ship
 		else if ((player1[row][col].getIsMarkedBlack() == false) && (player1[row][col].getIsGuessed() == true)) {
 			
-			// make another random row and col
-			Random newRandom = new Random();
-			int randomRow = newRandom.nextInt(10);
-			int randomCol = newRandom.nextInt(10);
-			
-			// keep making a random row and col till it has not been guessed 
-			while (player1[randomRow][randomCol].getIsGuessed() == true) {
-				randomRow = newRandom.nextInt(10);
-				randomCol = newRandom.nextInt(10);
-			}
-			setChanged();
-			notifyObservers(new BattleShipMoveMessage(randomRow,randomCol,2,2));
+				// make another random row and col
+				Random newRandom = new Random();
+				int randomRow = newRandom.nextInt(10);
+				int randomCol = newRandom.nextInt(10);
+				
+				// keep making a random row and col till it has not been guessed 
+				while (player1[randomRow][randomCol].getIsGuessed() == true) {
+					randomRow = newRandom.nextInt(10);
+					randomCol = newRandom.nextInt(10);
+				}
+				
+				// if the randomized row and column are part of the ship
+				if (player1[randomRow][randomCol].getIsMarkedBlack() == true) {
+					// set it to false 
+					player1[randomRow][randomCol].setIsMarkedBlack(false);
+				}
+				// marked it as guessed 
+				player1[randomRow][randomCol].setGuessed(true);
+				
+			 
+				setChanged();
+				notifyObservers(new BattleShipMoveMessage(randomRow,randomCol,2,2));
 		}
+		
 		// if the slot hasn't been guessed and is part of the ship
 		else if ((player1[row][col].getIsMarkedBlack() == true) && (player1[row][col].getIsGuessed() == false)) {
-			// mark as hit 
-			player1[row][col].setIsMarkedBlack(false);
-			// set as guessed 
-			player1[row][col].setGuessed(true);
-			setChanged();
-			notifyObservers(new BattleShipMoveMessage(row,col,3,2));
+				// mark as hit 
+				player1[row][col].setIsMarkedBlack(false);
+				// set as guessed 
+				player1[row][col].setGuessed(true);
+			 
+				setChanged();
+				notifyObservers(new BattleShipMoveMessage(row,col,3,2));
 		}
 		else {
 			 

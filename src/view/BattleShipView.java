@@ -497,6 +497,7 @@ public class BattleShipView extends Application implements Observer {
 	}
  
 	
+    
    /**
     * This function resets all of the boards back to default 
     */
@@ -643,6 +644,22 @@ public class BattleShipView extends Application implements Observer {
 								  }
 								  else if (msg.getStatus() == 2) {
 									  
+									  if  ( player1[msg.getRow()][msg.getColumn()].getFill() == Color.BLACK) {
+										  player1[msg.getRow()][msg.getColumn()].setFill(fireImage);
+										  // if the CPU got all of the player's ships
+										  if (model.gotAllPlayer1Ships() == true) {
+											     // create the alert 
+											     alert = new Alert(AlertType.INFORMATION);
+												 alert.setTitle("CPU Won");
+												 alert.setContentText("CPU got all your player's ships. CPU wins!");
+												 alert.showAndWait();
+												 gameOver = true;
+										 
+										  }
+									  }
+									  else if (player1[msg.getRow()][msg.getColumn()].getFill() == Color.WHITE){
+									  player1[msg.getRow()][msg.getColumn()].setFill(crossOutImage);
+									  }
 								  }
 								  // if the slot is part of the ship
 								  else {
@@ -653,7 +670,7 @@ public class BattleShipView extends Application implements Observer {
 									  if (model.gotAllPlayer1Ships() == true) {
 										     // create the alert 
 										     alert = new Alert(AlertType.INFORMATION);
-											 alert.setTitle("You Won");
+											 alert.setTitle("CPU Won");
 											 alert.setContentText("CPU got all your player's ships. CPU wins!");
 											 alert.showAndWait();
 											 gameOver = true;
