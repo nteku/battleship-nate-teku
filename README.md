@@ -1,5 +1,5 @@
 # battleship-nate-teku
-Implemented the BattleShip game GUI using JavaFX. This was one of my childhood games I grew up on as I had a lot of fun making this game. 
+Implemented a BattleShip game GUI using JavaFX. This was one of my childhood games I grew up on as I had a lot of fun making this game. 
 Here is a quick overview of the project:
 
  ![image](https://user-images.githubusercontent.com/80705261/147375365-24be465d-c6d0-4bd8-a5a1-4343fcb7cd0e.png)
